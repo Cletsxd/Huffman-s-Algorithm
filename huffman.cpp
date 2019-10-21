@@ -94,17 +94,25 @@ int main(){
     printf("\n");
     print_dist(vect_dist, tam_dist);
 
+    // Crea una cola de prioridad
+    // Un nodo es un par <int, char>
     priority_queue<pair<int, char> > pq;
 
     for(int i = 0; i < tam_dist; i++){
+        // Mete a la cola
         pq.push(make_pair(vect_dist[i].d, vect_dist[i].c));
     }
 
+    // Nodo auxiliar
     pair<int, char> top;
-    //cout << top.first << " " << top.second;
+
     for(int i = 0; i < tam_dist; i++){
+        // Toma el de "arriba"
         top = pq.top();
         printf("<%c, %i>", top.second, top.first);
+        // Saca de la cola
         pq.pop();
     }
+
+    // Nos quedamos sin nada en la cola...
 }
