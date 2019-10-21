@@ -101,7 +101,7 @@ int main(){
 
     for(int i = 0; i < tam_dist; i++){
         // Mete a la cola
-        pq.push(make_pair(vect_dist[i].d, vect_dist[i].c));
+        pq.push(make_pair(vect_dist[i].d * -1, vect_dist[i].c));
     }
 
     // Nodo auxiliar
@@ -117,6 +117,24 @@ int main(){
 
     for(int i = 0; i < tam_dist; i++){
         // Mete a la cola
-        pq.push(make_pair(vect_dist[i].d, vect_dist[i].c));
+        pq.push(make_pair(vect_dist[i].d * -1, vect_dist[i].c));
+    }
+
+    pair<int, char> top1;
+    pair<int, char> top2;
+    while(pq.size() > 1){
+        top1 = pq.top();
+        pq.pop();
+        top2 = pq.top();
+        pq.pop();
+        pq.push(make_pair(top1.first + top2.first, '_'));
+    }
+
+    for(int i = 0; i < pq.size(); i++){
+        // Toma el de "arriba"
+        top = pq.top();
+        printf("<%c, %i>", top.second, top.first);
+        // Saca de la cola
+        pq.pop();
     }
 }
