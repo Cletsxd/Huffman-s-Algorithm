@@ -171,6 +171,79 @@ void print_dist(Dist *dist, int t){
     }
 }
 
+void stick(Dist *v, Dist *list1, Dist *list2, Dist *listx, int len1, int len2, int lenx, int len){
+    int i = 0, j = 0, k = 0;
+
+    if(list1){
+        while(i < len1){
+            v[i].d = list1[i].d;
+            v[i].c = list1[i].c;
+            i ++;
+        }
+    }
+
+    if(listx){
+        while(k < lenx){
+            v[i].d = listx[k].d;
+            v[i].c = listx[k].c;
+            i ++;
+            k ++;
+        }
+    }
+
+    if(list2){
+        while(j < len2){
+            v[i].d = list2[j].d;
+            v[i].c = list2[j].c;
+            i ++;
+            j ++;
+        }
+    }
+}
+
+int uniform_distribution(int rangeLow, int rangeHigh) {
+    double myRand = rand()/(1.0 + RAND_MAX); 
+    int range = rangeHigh - rangeLow + 1;
+    int myRand_scaled = (myRand * range) + rangeLow;
+    return myRand_scaled;
+}
+
+void quick_sort3(Dist *v, int len){
+    if(len < 2){
+        return;
+    }
+
+    int x = v[uniform_distribution(0, len - 1)].d;
+    int cont_comp = 0;
+
+    Dist *list1 = (Dist*) malloc(len * sizeof(Dist));
+    Dist *list2 = (Dist*) malloc(len * sizeof(Dist));
+    Dist *listx = (Dist*) malloc(len * sizeof(Dist));
+    int cont1 = 0, cont2 = 0, contx = 0;
+
+    for(int i = 0; i < len; i++){
+        if(v[i].d < x){
+            list1[cont1].d = v[i].d;
+            list1[cont1].c = v[i].c;
+            cont1 ++;
+        }else if(v[i].d == x){
+            listx[contx].d = v[i].d;
+            listx[contx].c = v[i].c;
+            contx ++;
+        }else{
+            list2[cont2].d = v[i].d;
+            list2[cont2].c = v[i].c;
+            cont2 ++;
+        }
+    }
+
+    quick_sort3(list1, cont1);
+    quick_sort3(list2, cont2);
+
+    // pegar listas en v
+    stick(v, list1, list2, listx, cont1, cont2, contx, len);
+}
+
 int main(){
     // Llenar el vector de caracteres
     char vect_chars[20] = {'a', 'i', 'j', 's', 'd', 'a', 'k', 's', 'u', 'h', 'a', 'i', 's', 'd', 'a', 's', 'd', 'a', 'b', 's'};
@@ -186,5 +259,10 @@ int main(){
     dist(vect_chars, cont_diff, vect_dist, 20, tam_dist);
 
     printf("\n");
+    print_dist(vect_dist, tam_dist);
+
+    quick_sort3(vect_dist, tam_dist);
+
+    printf("\n\n");
     print_dist(vect_dist, tam_dist);
 }
