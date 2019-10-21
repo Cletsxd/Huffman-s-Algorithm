@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -22,129 +23,6 @@ struct Dist{
     char c;
     int d;
 };
-
-/* Tipo de dato class: es un tipo de dato compuesto y funcional.
-- Dentro de este tipo de dato se pueden ocupar los métodos de acceso como: public, private o protected
-    cada uno con funciones en específico.
-- Nodo: es un nodo de una cola. Contiene dos datos: dato1 (caracter), dato2 (frecuencia del dato1).
-  además, tiene un "apuntador" al siguiente nodo.
-*/
-class Nodo{
-    public:
-        char dato1;
-        int dato2;
-        Nodo *sig;
-};
-
-/* Cola: una lista con función de cola. FIFO (First In, First Out).
-- Contiene dos características: un nodo inicial (ini) y un nodo final (fin).
-- Tiene 6 funcionalidades...
-*/
-class Cola{
-    public:
-        Nodo *ini;
-        Nodo *fin;
-        Cola(); // Constructor de una cola.
-        ~Cola(); // Destructor de una cola.
-        int estaVacia(); // Si la cola está vacía manda 1, si no, manda 0.
-        void mete(char c, int x); // Mete datos a la cola (c: caracter, x: frecuencia del caracter).
-        void saca(); // Saca datos de la cola y los elimina.
-        Dist datoFte(); // Regresa el dato inicial (ini).
-        void muestra(); // Muestra los datos de una cola.
-};
-
-Cola::~Cola(){
-    Nodo *p = ini;
-    
-    while(p != NULL){
-        ini = p->sig;
-        delete p;
-        p = ini;
-    }
-}
-
-Cola::Cola(){
-    ini = NULL;
-    fin = NULL;
-}
-
-int Cola::estaVacia(){
-    if (ini == NULL && fin == NULL){
-        return 1;
-    }else{
-        return 0;
-    }
-}
-
-void Cola::mete(char c, int x){
-    Nodo *p;
-    p = new Nodo();
-    p->dato1 = c;
-    p->dato2 = x;
-    p->sig = NULL;
-
-    if(fin != NULL){
-        fin->sig = p;
-    }
-
-    fin = p;
-
-    if(ini == NULL){
-        ini = p;
-    }
-}
-
-void Cola::saca(){
-    if(ini==NULL && fin == NULL){
-       cout<<"Error Cola vacia";
-       exit(1);
-    }
-
-    Nodo *p = ini;
-    ini = ini->sig;
-
-    if(ini == NULL){
-        fin = NULL;
-    }
-
-    delete p;
-}
-
-Dist Cola::datoFte(){
-    Nodo *p = ini;
-    if(p == NULL){
-        cout<<"Error: Apuntador nulo";
-        exit(1);
-    }
-
-    Dist dist;
-    dist.c = p->dato1;
-    dist.d = p->dato2;
-
-    return dist;
-}
-
-void Cola::muestra(){
-    Cola aux;
-    Dist dist;
-
-    while(!estaVacia()){
-        dist = datoFte();
-        saca();
-        //cout<<"<"<<x<<">";
-        printf("<%c, %i>", dist.c, dist.d);
-        aux.mete(dist.c, dist.d);
-    }
-    printf("\n");
-
-    while(aux.estaVacia() == 0){
-        dist = aux.datoFte();
-        aux.saca();
-        mete(dist.c, dist.d);
-    }
-
-    return;
-}
 
 bool is_in_vector(char *cont_diff, char c, int tam){
     for(int i = 0; i < tam; i++){
@@ -199,79 +77,6 @@ void print_dist(Dist *dist, int t){
     }
 }
 
-void stick(Dist *v, Dist *list1, Dist *list2, Dist *listx, int len1, int len2, int lenx, int len){
-    int i = 0, j = 0, k = 0;
-
-    if(list1){
-        while(i < len1){
-            v[i].d = list1[i].d;
-            v[i].c = list1[i].c;
-            i ++;
-        }
-    }
-
-    if(listx){
-        while(k < lenx){
-            v[i].d = listx[k].d;
-            v[i].c = listx[k].c;
-            i ++;
-            k ++;
-        }
-    }
-
-    if(list2){
-        while(j < len2){
-            v[i].d = list2[j].d;
-            v[i].c = list2[j].c;
-            i ++;
-            j ++;
-        }
-    }
-}
-
-int uniform_distribution(int rangeLow, int rangeHigh) {
-    double myRand = rand()/(1.0 + RAND_MAX); 
-    int range = rangeHigh - rangeLow + 1;
-    int myRand_scaled = (myRand * range) + rangeLow;
-    return myRand_scaled;
-}
-
-void quick_sort3(Dist *v, int len){
-    if(len < 2){
-        return;
-    }
-
-    int x = v[uniform_distribution(0, len - 1)].d;
-    int cont_comp = 0;
-
-    Dist *list1 = (Dist*) malloc(len * sizeof(Dist));
-    Dist *list2 = (Dist*) malloc(len * sizeof(Dist));
-    Dist *listx = (Dist*) malloc(len * sizeof(Dist));
-    int cont1 = 0, cont2 = 0, contx = 0;
-
-    for(int i = 0; i < len; i++){
-        if(v[i].d < x){
-            list1[cont1].d = v[i].d;
-            list1[cont1].c = v[i].c;
-            cont1 ++;
-        }else if(v[i].d == x){
-            listx[contx].d = v[i].d;
-            listx[contx].c = v[i].c;
-            contx ++;
-        }else{
-            list2[cont2].d = v[i].d;
-            list2[cont2].c = v[i].c;
-            cont2 ++;
-        }
-    }
-
-    quick_sort3(list1, cont1);
-    quick_sort3(list2, cont2);
-
-    // pegar listas en v
-    stick(v, list1, list2, listx, cont1, cont2, contx, len);
-}
-
 int main(){
     // Llenar el vector de caracteres
     char vect_chars[20] = {'a', 'i', 'j', 's', 'd', 'a', 'k', 's', 'u', 'h', 'a', 'i', 's', 'd', 'a', 's', 'd', 'a', 'b', 's'};
@@ -289,16 +94,17 @@ int main(){
     printf("\n");
     print_dist(vect_dist, tam_dist);
 
-    quick_sort3(vect_dist, tam_dist);
+    priority_queue<pair<int, char> > pq;
 
-    printf("\n\n");
-    print_dist(vect_dist, tam_dist);
-
-    Cola cola_dist;
-
-    for(int i = tam_dist - 1; i >= 0; i--){
-        cola_dist.mete(vect_dist[i].c, vect_dist[i].d);
+    for(int i = 0; i < tam_dist; i++){
+        pq.push(make_pair(vect_dist[i].d, vect_dist[i].c));
     }
 
-    cola_dist.muestra();
+    pair<int, char> top;
+    //cout << top.first << " " << top.second;
+    for(int i = 0; i < tam_dist; i++){
+        top = pq.top();
+        printf("<%c, %i>", top.second, top.first);
+        pq.pop();
+    }
 }
