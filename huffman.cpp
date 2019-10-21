@@ -49,7 +49,8 @@ class Cola{
         int estaVacia(); // Si la cola está vacía manda 1, si no, manda 0.
         void mete(char c, int x); // Mete datos a la cola (c: caracter, x: frecuencia del caracter).
         void saca(); // Saca datos de la cola y los elimina.
-        char datoFte(); // Regresa el dato inicial (ini).
+        Dist datoFte(); // Regresa el dato inicial (ini).
+        void muestra(); // Muestra los datos de una cola.
 };
 
 Cola::~Cola(){
@@ -109,13 +110,40 @@ void Cola::saca(){
     delete p;
 }
 
-char Cola::datoFte(){
+Dist Cola::datoFte(){
     Nodo *p = ini;
     if(p == NULL){
         cout<<"Error: Apuntador nulo";
         exit(1);
     }
-    return p->dato1;
+
+    Dist dist;
+    dist.c = p->dato1;
+    dist.d = p->dato2;
+
+    return dist;
+}
+
+void Cola::muestra(){
+    Cola aux;
+    Dist dist;
+
+    while(!estaVacia()){
+        dist = datoFte();
+        saca();
+        //cout<<"<"<<x<<">";
+        printf("<%c, %i>", dist.c, dist.d);
+        aux.mete(dist.c, dist.d);
+    }
+    printf("\n");
+
+    while(aux.estaVacia() == 0){
+        dist = aux.datoFte();
+        aux.saca();
+        mete(dist.c, dist.d);
+    }
+
+    return;
 }
 
 bool is_in_vector(char *cont_diff, char c, int tam){
@@ -265,4 +293,12 @@ int main(){
 
     printf("\n\n");
     print_dist(vect_dist, tam_dist);
+
+    Cola cola_dist;
+
+    for(int i = tam_dist - 1; i >= 0; i--){
+        cola_dist.mete(vect_dist[i].c, vect_dist[i].d);
+    }
+
+    cola_dist.muestra();
 }
