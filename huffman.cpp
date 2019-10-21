@@ -96,6 +96,7 @@ int main(){
 
     // Crea una cola de prioridad
     // Un nodo es un par <int, char>
+    //      respetar este espacio _
     priority_queue<pair<int, char> > pq;
 
     for(int i = 0; i < tam_dist; i++){
@@ -114,5 +115,8 @@ int main(){
         pq.pop();
     }
 
-    // Nos quedamos sin nada en la cola...
+    for(int i = 0; i < tam_dist; i++){
+        // Mete a la cola
+        pq.push(make_pair(vect_dist[i].d, vect_dist[i].c));
+    }
 }
